@@ -51,3 +51,16 @@ variable "bootstrap_revision" {
   type        = number
   default     = 1
 }
+
+variable "google_api_key" {
+  description = "AI Studio key for releases/model-configs.yaml, written to Secret kagent-gemini. Set TF_VAR_google_api_key, which scripts/setup.sh loads from .env. Left empty the Secret is skipped and the agents will not start."
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
+variable "google_api_key_revision" {
+  description = "Bump to push a rotated google_api_key. The Secret's value is a write-only attribute, so OpenTofu cannot read it back to notice it changed."
+  type        = number
+  default     = 1
+}

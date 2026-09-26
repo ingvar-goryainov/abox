@@ -11,6 +11,20 @@ log() { echo "[$(date '+%H:%M:%S')] $*"; }
 
 log "=== k8sdiy-env setup start ==="
 
+# Provider credentials for the agents' ModelConfig.
+if [[ -f "${SCRIPT_DIR}/../.env" ]]; then
+  set -a
+  # shellcheck disable=SC1091
+  source "${SCRIPT_DIR}/../.env"
+  set +a
+  log "loaded .env"
+fi
+if [[ -n "${GOOGLE_API_KEY:-}" ]]; then
+  export TF_VAR_google_api_key="${GOOGLE_API_KEY}"
+else
+  log "WARNING: GOOGLE_API_KEY unset -- Secret kagent-gemini is skipped and the agents will not start"
+fi
+
 # Detect the platform once. kind and cloud-provider-kind both publish
 # linux/darwin builds for amd64/arm64 under the same naming scheme.
 case "$(uname -s)" in
