@@ -36,11 +36,12 @@ metadata:
 spec:
   transportType: stdio
   stdioTransport: {}
+  timeout: 120s
   deployment:
-    # Ours; scaffolded with `kmcp init go`, source in mcp/qdrant-mcp. Replaces
-    # mcp-server-qdrant, which could only embed in-process with fastembed and
-    # was OOMKilled doing it.
-    image: ghcr.io/den-vasyliev/abox/qdrant-mcp:0.4.0
+    # Ours; scaffolded with `kmcp init go`, source in mcp/qdrant-mcp. Runs
+    # alongside the official mcp-server-qdrant below rather than replacing it:
+    # the two embed with different models into different collections.
+    image: ghcr.io/den-vasyliev/abox/qdrant-mcp:0.5.0
     cmd: /app/server
     env:
       # Any OpenAI-compatible /v1/embeddings route. The standalone llama.cpp
@@ -68,6 +69,17 @@ spec:
       # EMBEDDINGS_BASE_URL is therefore a re-embed, not a copy.
       QDRANT_URL: http://qdrant.qdrant:6333
       QDRANT_COLLECTION: abox-nomic
+      # The 7000 default was derived from prose at ~3.4 chars/token. Indented
+      # YAML tokenizes denser: a 7000-char slice of an Agent manifest measures
+      # over the 2048-token slot this endpoint serves (16384 ctx / 8 slots) and
+      # llama.cpp rejects it outright --
+      #
+      #   input (2075 tokens) is too large to process. increase the physical
+      #   batch size (current batch size: 2048)
+      #
+      # 3500 keeps a chunk near 1000-1400 tokens with room for the
+      # search_document: prefix, which comes out of the same budget.
+      EMBEDDING_MAX_INPUT_CHARS: "3500"
     resources:
       requests:
         cpu: 25m
@@ -75,3 +87,65 @@ spec:
       limits:
         cpu: 500m
         memory: 256Mi
+---
+apiVersion: kagent.dev/v1alpha1
+kind: MCPServer
+metadata:
+  name: qdrant-mcp-official
+  namespace: kagent
+spec:
+  transportType: stdio
+  stdioTransport: {}
+  timeout: 120s
+  deployment:
+    # The official qdrant/mcp-server-qdrant, next to our Go qdrant-mcp above so
+    # the two toolsets can be compared on the same data. Upstream publishes no
+    # image, so mcp/mcp-server-qdrant/Dockerfile pins the PyPI release and bakes
+    # the ONNX weights in: kmcp spawns a fresh stdio process per session, and
+    # fetching the model from HuggingFace on each of those is not something to
+    # put in the request path.
+    #
+    # fastembed is its only embedding provider and runs the model inside this
+    # pod. all-MiniLM-L6-v2 is 384 dims and ~90MB and fits the limit below; the
+    # f32 nomic ONNX is what got this server OOMKilled at 2Gi.
+    #
+    # TODO: replace <sha> once the first build lands -- the tag is immutable and
+    # only CI knows it. `gh run list --workflow "Build mcp-server-qdrant image"`.
+    image: ghcr.io/den-vasyliev/abox/mcp-server-qdrant:0.8.1-<sha>
+    cmd: /usr/local/bin/mcp-server-qdrant
+    env:
+      QDRANT_URL: http://qdrant.qdrant:6333
+      # 384 dims against qdrant-mcp's 768, so Qdrant rejects a cross-write on
+      # vector size alone and the two spaces cannot merge by accident. Setting
+      # this at all is load-bearing for a second reason: with COLLECTION_NAME
+      # set the server hides the collection_name parameter from both tools, and
+      # without it the parameter becomes required and the agent picks the
+      # collection.
+      COLLECTION_NAME: abox-minilm
+      EMBEDDING_PROVIDER: fastembed
+      EMBEDDING_MODEL: sentence-transformers/all-MiniLM-L6-v2
+      # Where the Dockerfile baked the weights.
+      FASTEMBED_CACHE_PATH: /opt/fastembed
+      # vector_find's default, so the two toolsets return the same number of
+      # hits and the comparison is like for like.
+      QDRANT_SEARCH_LIMIT: "5"
+      # The upstream defaults describe "memories" and "personal information
+      # about the user", which steers an agent away from using these tools for
+      # manifests at all.
+      TOOL_STORE_DESCRIPTION: >-
+        Index a Kubernetes manifest or a note for later semantic search. Pass
+        the full text as `information` and put path, kind, name and namespace
+        in `metadata` so a hit can be traced back to its source.
+      TOOL_FIND_DESCRIPTION: >-
+        Semantic search over what qdrant-store has indexed: Kubernetes
+        manifests, OpenTofu, scripts and docs. Use it for questions about the
+        content of an object -- what it configures, which file does X, where
+        something is set. Returns the stored text with its metadata, best
+        match first.
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: "1"
+        memory: 1Gi

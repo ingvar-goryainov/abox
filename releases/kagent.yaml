@@ -78,16 +78,21 @@ spec:
     # kagent-tools subchart is left at its default.
     istio-agent:
       enabled: false
+    # Replaced by our own Agent of the same name in agent-retrieval.yaml. The
+    # chart hardcodes this agent's system prompt in
+    # charts/k8s-agent/templates/agent.yaml and exposes only modelConfigRef as
+    # a value, so the prompt cannot be tuned in place -- and that prompt's
+    # "Response Format" section makes it summarise tool output into prose. As
+    # the retrieval agents' ingest delegate it has to relay a manifest
+    # verbatim, which it never did.
+    k8s-agent:
+      enabled: false
     cilium-policy-agent:
       enabled: false
     cilium-manager-agent:
       enabled: false
     cilium-debug-agent:
       enabled: false
-    providers:
-      default: openAI
-      openAI:
-        apiKey: OPENAI_API_KEY
 ---
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: ReferenceGrant
