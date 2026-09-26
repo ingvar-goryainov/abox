@@ -102,11 +102,27 @@ func maxInputChars() int {
 	return defaultMaxInputChars
 }
 
+// The cap is on what the server receives, and the instruction prefix is part
+// of that: it is prepended before the text is tokenized. Taking it out of the
+// budget here is what keeps a full-size chunk under the cap rather than
+// maxInputChars()+len(prefix) -- 7017 characters against a ceiling derived
+// with 13 tokens to spare.
+func embedBudget(prefix string) int {
+	b := maxInputChars() - len([]rune(prefix))
+	if b < 1 {
+		b = 1
+	}
+	return b
+}
+
 // Splits on a line boundary when there is one in the last fifth of the
-// window, so a chunk rarely ends mid-key.
-func chunk(s string) []string {
+// window, so a chunk rarely ends mid-key. size is the caller's budget, so the
+// pieces are already sized for the prefix that will be prepended to each.
+func chunk(s string, size int) []string {
 	r := []rune(s)
-	size := maxInputChars()
+	if size < 1 {
+		size = 1
+	}
 	if len(r) <= size {
 		return []string{s}
 	}
@@ -164,8 +180,8 @@ func queryPrefix() string {
 }
 
 func embed(ctx context.Context, text, prefix string) ([]float64, error) {
-	if r := []rune(text); len(r) > maxInputChars() {
-		text = string(r[:maxInputChars()])
+	if r := []rune(text); len(r) > embedBudget(prefix) {
+		text = string(r[:embedBudget(prefix)])
 	}
 	body := map[string]any{"input": prefix + text}
 	if m := embeddingsModel(); m != "" {
@@ -229,7 +245,7 @@ func VectorStore() MCPTool[StoreParams, Raw] {
 		Name:        "vector_store",
 		Description: "Embed text with the configured embeddings server and store it in Qdrant. Long text is split into several points; nothing is dropped.",
 		Handler: func(ctx context.Context, _ *mcp.ServerSession, p *mcp.CallToolParamsFor[StoreParams]) (*mcp.CallToolResultFor[Raw], error) {
-			parts := chunk(p.Arguments.Information)
+			parts := chunk(p.Arguments.Information, embedBudget(documentPrefix()))
 
 			doc, err := uuid()
 			if err != nil {
