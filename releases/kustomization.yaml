@@ -9,6 +9,7 @@ resources:
   - llama-cpp-embeddings.yaml
   - llmd.yaml
   - mcp-servers.yaml
+  - model-configs.yaml
   - neo4j.yaml
   - phoenix.yaml
   - qdrant.yaml

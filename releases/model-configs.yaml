@@ -1,0 +1,10 @@
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  name: gemini-3-5-flash
+  namespace: kagent
+spec:
+  provider: Gemini
+  model: gemini-3.5-flash
+  apiKeySecret: kagent-gemini
+  apiKeySecretKey: GOOGLE_API_KEY
