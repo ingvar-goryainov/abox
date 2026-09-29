@@ -202,10 +202,13 @@ spec:
     stream: true
     # Toolset B: the official mcp-server-qdrant over all-MiniLM-L6-v2, 384
     # dims, collection abox-minilm. It stores one vector per text and does not
-    # chunk, and MiniLM reads 256 tokens, so anything deep in a long manifest
-    # is not indexed at all. That is the limitation the two-search rule in the
-    # Retrieve section exists to work around, and it is why the prompt below
-    # is worded for either toolset.
+    # chunk, and fastembed's MiniLM reads 128 tokens -- the ONNX export's
+    # tokenizer_config sets max_length 128, below sentence-transformers' 256 --
+    # so anything deep in a long manifest is not indexed at all: three
+    # quarters of this repo's own manifests by character count, see
+    # docs/adr/0001-retrieval-agent-vector-toolset.md. That is the limitation
+    # the two-search rule in the Retrieve section exists to work around, and
+    # it is why the prompt below is worded for either toolset.
     #
     # Identical to retrieval-agent's prompt apart from the tool names.
     systemMessage: |
