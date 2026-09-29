@@ -98,40 +98,15 @@ spec:
   stdioTransport: {}
   timeout: 120s
   deployment:
-    # The official qdrant/mcp-server-qdrant, next to our Go qdrant-mcp above so
-    # the two toolsets can be compared on the same data. Upstream publishes no
-    # image, so mcp/mcp-server-qdrant/Dockerfile pins the PyPI release and bakes
-    # the ONNX weights in: kmcp spawns a fresh stdio process per session, and
-    # fetching the model from HuggingFace on each of those is not something to
-    # put in the request path.
-    #
-    # fastembed is its only embedding provider and runs the model inside this
-    # pod. all-MiniLM-L6-v2 is 384 dims and ~90MB and fits the limit below; the
-    # f32 nomic ONNX is what got this server OOMKilled at 2Gi.
-    #
-    # TODO: replace <sha> once the first build lands -- the tag is immutable and
-    # only CI knows it. `gh run list --workflow "Build mcp-server-qdrant image"`.
-    image: ghcr.io/den-vasyliev/abox/mcp-server-qdrant:0.8.1-<sha>
+    image: ghcr.io/ingvar-goryainov/abox/mcp-server-qdrant:0.8.1-4de8aa2
     cmd: /usr/local/bin/mcp-server-qdrant
     env:
       QDRANT_URL: http://qdrant.qdrant:6333
-      # 384 dims against qdrant-mcp's 768, so Qdrant rejects a cross-write on
-      # vector size alone and the two spaces cannot merge by accident. Setting
-      # this at all is load-bearing for a second reason: with COLLECTION_NAME
-      # set the server hides the collection_name parameter from both tools, and
-      # without it the parameter becomes required and the agent picks the
-      # collection.
       COLLECTION_NAME: abox-minilm
       EMBEDDING_PROVIDER: fastembed
       EMBEDDING_MODEL: sentence-transformers/all-MiniLM-L6-v2
-      # Where the Dockerfile baked the weights.
       FASTEMBED_CACHE_PATH: /opt/fastembed
-      # vector_find's default, so the two toolsets return the same number of
-      # hits and the comparison is like for like.
       QDRANT_SEARCH_LIMIT: "5"
-      # The upstream defaults describe "memories" and "personal information
-      # about the user", which steers an agent away from using these tools for
-      # manifests at all.
       TOOL_STORE_DESCRIPTION: >-
         Index a Kubernetes manifest or a note for later semantic search. Pass
         the full text as `information` and put path, kind, name and namespace
