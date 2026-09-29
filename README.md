@@ -68,6 +68,9 @@ make push   # bumps patch version, tags, pushes → CI publishes OCI artifact �
 | `releases/crds/` | CRD HelmReleases: gateway-api, agentgateway, kagent, inference-extension |
 | `releases/` | App HelmReleases + Gateway + HTTPRoutes |
 | `images/nomic-embed/` | Dockerfile baking nomic-embed-text-v1.5 into llama.cpp server |
+| `mcp/` | The two vector MCP servers: our Go `qdrant-mcp`, and the official `mcp-server-qdrant`'s image |
+| `docs/` | [Retrieval toolsets: setup and switching](docs/retrieval-toolsets.md), and ADRs in `docs/adr/` |
+| `evals/retrieval/` | Scripted comparison of the two vector toolsets |
 | `scripts/setup.sh` | Full setup script (`make run`) |
 | `.github/workflows/flux-push.yaml` | CI: publish `releases/` as OCI artifact on `v*` tags |
 
@@ -169,6 +172,21 @@ make fix-egress
 A default 2-core/8GB Codespace is tight — the three kind nodes are containers
 sharing that one host. Both backends are sized to fit it; raise the
 requests/limits if you run somewhere with real headroom.
+
+## Retrieval: two vector toolsets
+
+Two kagent agents answer from the same Qdrant with the same prompt and model,
+through different vector MCP servers:
+
+| agent | MCP server | model | collection |
+|---|---|---|---|
+| `retrieval-agent` | `qdrant-mcp`, ours: embeds through the endpoints above, chunks long text | nomic-embed-text-v1.5 | `abox-nomic` |
+| `retrieval-agent-minilm` | `qdrant-mcp-official`, the default Qdrant MCP: model in-pod, one vector per text | all-MiniLM-L6-v2 | `abox-minilm` |
+
+[docs/retrieval-toolsets.md](docs/retrieval-toolsets.md) has the setup diagram
+and walks through switching toolsets and models, getting a result from each, and
+comparing. [ADR 0001](docs/adr/0001-retrieval-agent-vector-toolset.md) records
+the measured comparison.
 
 ## Adding components
 
