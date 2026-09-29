@@ -1,0 +1,14 @@
+{
+ "base/go-minilm/q04": {
+  "verdict": "wrong",
+  "reason": "The regex matched 500m from neo4j-mcp's CPU limit, which the answer correctly labels as a different component. It says the database's own resources are not in the retrieved chunks: an honest miss, not a partial answer."
+ },
+ "scaled/go-minilm/q22": {
+  "verdict": "partial",
+  "reason": "Infers from the allowed-tools list that creating, deleting and editing specs are out of scope, which is right, but misses the stored apply/patch/scale/exec rule. The regex missed 'deleting'."
+ },
+ "scaled/official-minilm/q01": {
+  "verdict": "wrong",
+  "reason": "Scored on the first attempt, which hit the 12-model-call cap without answering; the transcript on disk is the re-run kept for its queries, which stopped after 6 searches and said nothing relevant is stored. Wrong either way."
+ }
+}

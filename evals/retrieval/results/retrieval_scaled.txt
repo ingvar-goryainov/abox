@@ -1,0 +1,39 @@
+# corpus: scaled (187 objects, 301363 chars)
+
+### all answerable
+arm                n |  hit@1 q  hit@5 q hit@1 kw hit@5 kw hit@5 any |  ev@5 q ev@5 kw ev@5 any | MRR best
+official-minilm   30 |    23.3%    50.0%    46.7%    76.7%     80.0% |   50.0%   80.0%    80.0% |    0.621
+go-minilm         30 |    53.3%    83.3%    70.0%    83.3%     93.3% |   70.0%   60.0%    83.3% |    0.858
+go-nomic          30 |    56.7%    83.3%    76.7%   100.0%    100.0% |   83.3%   96.7%   100.0% |    0.961
+
+### answer within the first 128 tokens of its object
+arm                n |  hit@1 q  hit@5 q hit@1 kw hit@5 kw hit@5 any |  ev@5 q ev@5 kw ev@5 any | MRR best
+official-minilm    7 |    42.9%    71.4%    71.4%    85.7%     85.7% |   71.4%   85.7%    85.7% |    0.786
+go-minilm          7 |    57.1%    71.4%    57.1%    85.7%     85.7% |   71.4%   57.1%    85.7% |    0.857
+go-nomic           7 |    71.4%    85.7%   100.0%   100.0%    100.0% |   85.7%  100.0%   100.0% |    1.000
+
+### answer past the first 128 tokens
+arm                n |  hit@1 q  hit@5 q hit@1 kw hit@5 kw hit@5 any |  ev@5 q ev@5 kw ev@5 any | MRR best
+official-minilm   23 |    17.4%    43.5%    39.1%    73.9%     78.3% |   43.5%   78.3%    78.3% |    0.570
+go-minilm         23 |    52.2%    87.0%    73.9%    82.6%     95.7% |   69.6%   60.9%    82.6% |    0.859
+go-nomic          23 |    52.2%    82.6%    69.6%   100.0%    100.0% |   82.6%   95.7%   100.0% |    0.949
+
+### Ukrainian questions (first query in Ukrainian)
+arm                n |  hit@1 q  hit@5 q hit@1 kw hit@5 kw hit@5 any |  ev@5 q ev@5 kw ev@5 any | MRR best
+official-minilm    4 |    50.0%    75.0%    25.0%    75.0%     75.0% |   75.0%   75.0%    75.0% |    0.583
+go-minilm          4 |    25.0%    50.0%    75.0%   100.0%    100.0% |   50.0%   50.0%   100.0% |    1.000
+go-nomic           4 |    25.0%    50.0%    75.0%   100.0%    100.0% |   50.0%  100.0%   100.0% |    0.833
+
+### result shape per find call
+official-minilm  distinct objects in top-5: mean 5.00  | response chars: median 8876  mean 10718  max 51238
+go-minilm        distinct objects in top-5: mean 3.42  | response chars: median 3215  mean 3184  max 3434
+go-nomic         distinct objects in top-5: mean 4.75  | response chars: median 9473  mean 9164  max 15627
+
+### top-1 similarity, answerable vs negative (official returns no score)
+go-minilm        answerable min 0.213 median 0.608 | negatives 0.466, 0.635
+go-nomic         answerable min 0.630 median 0.741 | negatives 0.610, 0.648
+
+### index coverage (share of corpus characters inside an embedded token window)
+official-minilm   21.7%  (187 points: one per object, 128-token window incl. [CLS]/[SEP])
+go-minilm         99.7%  (1270 points)
+go-nomic         100.0%  (223 points)

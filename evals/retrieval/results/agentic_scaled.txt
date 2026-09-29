@@ -1,0 +1,46 @@
+
+## corpus: scaled  (gemini-3.5-flash)
+arm                n |  correct  partial   wrong |  deep ok  head ok  uk ok | neg abst |   seen miss|seen | >3 calls calls res kch in ktok   s/q
+official-minilm   30 |    80.0%     6.7%   13.3% |    78.3%    85.7%  75.0% | 2/2      |  80.0%         1 |        9  4.41    56.0    55.0  13.5
+go-minilm         30 |    93.3%     6.7%    0.0% |    95.7%    85.7% 100.0% | 2/2      |  83.3%         0 |        5  2.81    19.6    16.6  10.6
+go-nomic          30 |    90.0%     3.3%    6.7% |    91.3%    85.7% 100.0% | 2/2      |  90.0%         0 |        0  2.09    38.8    16.9   9.2
+
+### per question (scaled)  C=correct P=partial W=wrong A=abstain H=halluc; lower-case = evidence never reached the agent
+id   depth  official-minilm        go-minilm         go-nomic
+q01  deep             w* 6c             C 2c             C 2c
+q02  deep              C 2c             C 8c             C 2c
+q03  head              c 2c             c 2c             C 2c
+q04  deep              C 2c             c 2c             C 2c
+q05  deep              w 3c             C 2c             C 2c
+q06  deep             C 10c             C 2c             C 2c
+q07  head              C 2c             C 2c             C 2c
+q08  head              C 2c             C 2c             C 2c
+q09  deep              C 2c             C 7c             C 2c
+q10  deep              w 6c             C 2c             w 2c
+q11  deep              C 2c             C 2c             C 2c
+q12  deep              C 3c             C 2c             w 3c
+q13  deep              p 3c             C 2c             C 2c
+q14  deep              C 6c             C 6c             C 2c
+q15  head              C 2c             C 2c             C 2c
+q16  deep              C 2c             C 2c             C 2c
+q17  deep              C 8c             C 2c             C 2c
+q18  deep              C 2c             C 5c             C 2c
+q19  deep              C 2c             c 2c             C 2c
+q20  head              p 3c             p 3c             p 2c
+q21  deep              C 3c             C 2c             C 2c
+q22  deep              C 6c            p* 3c             C 2c
+q23  deep             C 12c             C 3c             C 2c
+q24  head              C 2c             C 2c             C 2c
+q25  deep              C 2c             C 2c             C 2c
+q26  deep              C 2c             C 2c             C 2c
+n01  neg               A 3c             A 3c             A 3c
+n02  neg              A 11c             A 3c             A 3c
+u01  head              C 2c             C 2c             C 2c
+u02  deep              C 2c             C 2c             C 2c
+u03  deep              C 2c             C 2c             C 2c
+u04  deep             W 24c             C 5c             C 2c
+
+* hand-audited, see overrides.json
+
+### numbers in answers that no tool result contains (1 answers)
+go-minilm        q20: 0.5032, 0.5517, 0.5970

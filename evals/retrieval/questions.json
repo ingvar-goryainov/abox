@@ -1,0 +1,744 @@
+[
+ {
+  "id": "q01",
+  "lang": "en",
+  "q": "Why does the kagent HelmRelease need a postRenderer?",
+  "kw": "HelmRelease kagent postRenderers label",
+  "targets": [
+   "HelmRelease/kagent"
+  ],
+  "evidence": "postRenderers:",
+  "facts": [
+   [
+    "build metadata",
+    "\\+dc7fc",
+    "'\\+'",
+    "\"\\+\"",
+    "\\+ sign",
+    "plus sign",
+    "0\\.10\\.1\\+"
+   ],
+   [
+    "label"
+   ]
+  ],
+  "depth_tokens": 293,
+  "depth": "deep",
+  "doc_tokens": 820
+ },
+ {
+  "id": "q02",
+  "lang": "en",
+  "q": "Which Gateway API release channel is installed, and why can't it be the standard channel?",
+  "kw": "GitRepository gateway-api experimental channel v1alpha2 TLSRoute",
+  "targets": [
+   "GitRepository/gateway-api",
+   "Kustomization/gateway-api-crds"
+  ],
+  "evidence": "Only experimental serves v1alpha2",
+  "facts": [
+   [
+    "experimental"
+   ],
+   [
+    "v1alpha2"
+   ]
+  ],
+  "depth_tokens": 252,
+  "depth": "deep",
+  "doc_tokens": 506
+ },
+ {
+  "id": "q03",
+  "lang": "en",
+  "q": "What version of the Qdrant Helm chart is deployed?",
+  "kw": "HelmRelease qdrant chart version",
+  "targets": [
+   "HelmRelease/qdrant"
+  ],
+  "evidence": "version: \"1.19.1\"",
+  "facts": [
+   [
+    "1\\.19\\.1"
+   ]
+  ],
+  "depth_tokens": 55,
+  "depth": "head",
+  "doc_tokens": 94
+ },
+ {
+  "id": "q04",
+  "lang": "en",
+  "q": "How much memory and CPU is the Neo4j database given?",
+  "kw": "HelmRelease neo4j resources memory cpu",
+  "targets": [
+   "HelmRelease/neo4j"
+  ],
+  "evidence": "memory: \"2Gi\"",
+  "facts": [
+   [
+    "2 ?Gi"
+   ],
+   [
+    "500m",
+    "0\\.5 (cpu|core)"
+   ]
+  ],
+  "depth_tokens": 248,
+  "depth": "deep",
+  "doc_tokens": 596
+ },
+ {
+  "id": "q05",
+  "lang": "en",
+  "q": "Why are APOC procedures configured as unrestricted in Neo4j?",
+  "kw": "HelmRelease neo4j apoc procedures unrestricted",
+  "targets": [
+   "HelmRelease/neo4j"
+  ],
+  "evidence": "apoc.meta.schema reads internal store",
+  "facts": [
+   [
+    "apoc\\.meta",
+    "get-schema"
+   ],
+   [
+    "internal store",
+    "ProcedureRegistrationFailed",
+    "unavailable",
+    "registration"
+   ]
+  ],
+  "depth_tokens": 380,
+  "depth": "deep",
+  "doc_tokens": 596
+ },
+ {
+  "id": "q06",
+  "lang": "en",
+  "q": "Why is the Neo4j LoadBalancer service disabled?",
+  "kw": "HelmRelease neo4j services LoadBalancer disabled",
+  "targets": [
+   "HelmRelease/neo4j"
+  ],
+  "evidence": "KinD has\n        # one LB address",
+  "facts": [
+   [
+    "one LB",
+    "one load ?balancer",
+    "single (LB|load ?balancer)",
+    "only one (LB|load ?balancer)",
+    "one LoadBalancer"
+   ],
+   [
+    "agentgateway",
+    "Pending"
+   ]
+  ],
+  "depth_tokens": 489,
+  "depth": "deep",
+  "doc_tokens": 596
+ },
+ {
+  "id": "q07",
+  "lang": "en",
+  "q": "How long is the Phoenix startup probe budget, and why was it widened?",
+  "kw": "HelmRelease phoenix startupProbe failureThreshold",
+  "targets": [
+   "HelmRelease/phoenix"
+  ],
+  "evidence": "Alembic migrations",
+  "facts": [
+   [
+    "10 ?min",
+    "ten min",
+    "600 ?s",
+    "120"
+   ],
+   [
+    "Alembic",
+    "migration"
+   ]
+  ],
+  "depth_tokens": 119,
+  "depth": "head",
+  "doc_tokens": 256
+ },
+ {
+  "id": "q08",
+  "lang": "en",
+  "q": "Which port does the llama.cpp embeddings Service listen on?",
+  "kw": "Service llama-cpp-embeddings port",
+  "targets": [
+   "Service/llama-cpp-embeddings",
+   "Deployment/llama-cpp-embeddings",
+   "HTTPRoute/llama-cpp-embeddings",
+   "MCPServer/qdrant-mcp"
+  ],
+  "evidence": "port: 8090",
+  "facts": [
+   [
+    "8090"
+   ]
+  ],
+  "depth_tokens": 62,
+  "depth": "head",
+  "doc_tokens": 76
+ },
+ {
+  "id": "q09",
+  "lang": "en",
+  "q": "What --ctx-size and --parallel does the standalone llama.cpp embeddings Deployment run with, and what context does each slot get?",
+  "kw": "Deployment llama-cpp-embeddings ctx-size parallel slot",
+  "targets": [
+   "Deployment/llama-cpp-embeddings"
+  ],
+  "evidence": "16384 / --parallel 8 = 2048 tokens per slot",
+  "facts": [
+   [
+    "16384"
+   ],
+   [
+    "\\b8\\b"
+   ],
+   [
+    "2048"
+   ]
+  ],
+  "depth_tokens": 491,
+  "depth": "deep",
+  "doc_tokens": 904
+ },
+ {
+  "id": "q10",
+  "lang": "en",
+  "q": "Why does the llm-d decode container run llama.cpp instead of vLLM?",
+  "kw": "HelmRelease llm-d-embedding llama.cpp vLLM CPU backend",
+  "targets": [
+   "HelmRelease/llm-d-embedding"
+  ],
+  "evidence": "killed by a signal on the first forward",
+  "facts": [
+   [
+    "signal",
+    "killed",
+    "crash"
+   ],
+   [
+    "forward pass",
+    "not OOM",
+    "9Gi",
+    "not an OOM",
+    "not out of memory"
+   ]
+  ],
+  "depth_tokens": 583,
+  "depth": "deep",
+  "doc_tokens": 1168
+ },
+ {
+  "id": "q11",
+  "lang": "en",
+  "q": "Why is modelCommand set to custom in the llm-d modelservice values?",
+  "kw": "HelmRelease llm-d-embedding modelCommand custom argsByProtocol",
+  "targets": [
+   "HelmRelease/llm-d-embedding"
+  ],
+  "evidence": "arguments for\n          # oci:// not implemented",
+  "facts": [
+   [
+    "argsByProtocol",
+    "not implemented"
+   ],
+   [
+    "oci://",
+    "oci"
+   ]
+  ],
+  "depth_tokens": 502,
+  "depth": "deep",
+  "doc_tokens": 1168
+ },
+ {
+  "id": "q12",
+  "lang": "en",
+  "q": "Why don't embedding requests go through the InferencePool endpoint picker?",
+  "kw": "HTTPRoute llm-d-embedding EPP bypass decode Service",
+  "targets": [
+   "HTTPRoute/llm-d-embedding"
+  ],
+  "evidence": "built around\n# decode/prefill generation traffic",
+  "facts": [
+   [
+    "generation",
+    "decode/prefill",
+    "prefill"
+   ],
+   [
+    "scorer",
+    "single-shot",
+    "one replica",
+    "nothing to schedule"
+   ]
+  ],
+  "depth_tokens": 144,
+  "depth": "deep",
+  "doc_tokens": 484
+ },
+ {
+  "id": "q13",
+  "lang": "en",
+  "q": "Why does the llm-d InferencePool select model servers by llm-d.ai/model rather than the blanket llm-d.ai/inferenceServing label?",
+  "kw": "HelmRelease llm-d-pool modelServers matchLabels",
+  "targets": [
+   "HelmRelease/llm-d-pool"
+  ],
+  "evidence": "silently pulls its pods into this pool",
+  "facts": [
+   [
+    "second model"
+   ],
+   [
+    "wrong server",
+    "wrong model",
+    "pulls its pods",
+    "pull.* into (this|the) pool"
+   ]
+  ],
+  "depth_tokens": 506,
+  "depth": "deep",
+  "doc_tokens": 555
+ },
+ {
+  "id": "q14",
+  "lang": "en",
+  "q": "What CPU and memory does the endpoint picker (EPP) request, and why not the chart default?",
+  "kw": "HelmRelease llm-d-pool inferenceExtension resources EPP",
+  "targets": [
+   "HelmRelease/llm-d-pool"
+  ],
+  "evidence": "The chart defaults the EPP to 4 CPU / 8Gi",
+  "facts": [
+   [
+    "100m"
+   ],
+   [
+    "128Mi"
+   ],
+   [
+    "4 CPU",
+    "8Gi",
+    "Insufficient cpu",
+    "Pending"
+   ]
+  ],
+  "depth_tokens": 224,
+  "depth": "deep",
+  "doc_tokens": 555
+ },
+ {
+  "id": "q15",
+  "lang": "en",
+  "q": "Why is the InferenceObjective written by hand instead of through the inferencepool chart's value?",
+  "kw": "InferenceObjective nomic-embed-text chart template broken",
+  "targets": [
+   "InferenceObjective/nomic-embed-text"
+  ],
+  "evidence": "that template is broken upstream in v1.5.0",
+  "facts": [
+   [
+    "broken",
+    "nil pointer",
+    "bug"
+   ],
+   [
+    "template",
+    "v1\\.5\\.0"
+   ]
+  ],
+  "depth_tokens": 96,
+  "depth": "head",
+  "doc_tokens": 228
+ },
+ {
+  "id": "q16",
+  "lang": "en",
+  "q": "Which Gateway API Inference Extension version is pinned, and why not the newest release?",
+  "kw": "GitRepository gateway-api-inference-extension version v1.5.0 v1.6.1",
+  "targets": [
+   "GitRepository/gateway-api-inference-extension"
+  ],
+  "evidence": "v1.6.1 is the newest release, but it drops",
+  "facts": [
+   [
+    "v?1\\.5\\.0"
+   ],
+   [
+    "inferenceobjectives",
+    "inferencemodelrewrites",
+    "no inferencepool chart",
+    "chart (is )?(not )?published",
+    "drops"
+   ]
+  ],
+  "depth_tokens": 495,
+  "depth": "deep",
+  "doc_tokens": 714
+ },
+ {
+  "id": "q17",
+  "lang": "en",
+  "q": "What happens if agentgateway's inferenceExtension is left disabled?",
+  "kw": "HelmRelease agentgateway inferenceExtension enabled InferencePool",
+  "targets": [
+   "HelmRelease/agentgateway"
+  ],
+  "evidence": "silently never resolves",
+  "facts": [
+   [
+    "InferencePool"
+   ],
+   [
+    "never resolves",
+    "not resolve",
+    "won't resolve",
+    "fail to resolve",
+    "doesn't resolve",
+    "does not resolve",
+    "unresolved"
+   ]
+  ],
+  "depth_tokens": 127,
+  "depth": "deep",
+  "doc_tokens": 185
+ },
+ {
+  "id": "q18",
+  "lang": "en",
+  "q": "What chunk size does the Go qdrant-mcp server use for embeddings input, and why that value?",
+  "kw": "MCPServer qdrant-mcp EMBEDDING_MAX_INPUT_CHARS",
+  "targets": [
+   "MCPServer/qdrant-mcp"
+  ],
+  "evidence": "EMBEDDING_MAX_INPUT_CHARS: \"3500\"",
+  "facts": [
+   [
+    "3500"
+   ],
+   [
+    "2048",
+    "token",
+    "YAML"
+   ]
+  ],
+  "depth_tokens": 718,
+  "depth": "deep",
+  "doc_tokens": 756
+ },
+ {
+  "id": "q19",
+  "lang": "en",
+  "q": "Which embedding model and how many dimensions does the official Qdrant MCP server use?",
+  "kw": "MCPServer qdrant-mcp-official EMBEDDING_MODEL",
+  "targets": [
+   "MCPServer/qdrant-mcp-official",
+   "Agent/retrieval-agent-minilm"
+  ],
+  "evidence": "EMBEDDING_MODEL: sentence-transformers/all-MiniLM-L6-v2",
+  "facts": [
+   [
+    "MiniLM"
+   ],
+   [
+    "384"
+   ]
+  ],
+  "depth_tokens": 479,
+  "depth": "deep",
+  "doc_tokens": 756
+ },
+ {
+  "id": "q20",
+  "lang": "en",
+  "q": "Which LLM do the agents use, and where does its API key come from?",
+  "kw": "ModelConfig gemini provider apiKeySecret",
+  "targets": [
+   "ModelConfig/gemini-3-5-flash"
+  ],
+  "evidence": "apiKeySecret: kagent-gemini",
+  "facts": [
+   [
+    "gemini"
+   ],
+   [
+    "kagent-gemini"
+   ]
+  ],
+  "depth_tokens": 50,
+  "depth": "head",
+  "doc_tokens": 73
+ },
+ {
+  "id": "q21",
+  "lang": "en",
+  "q": "How many requests may the retrieval agent keep in flight to k8s-agent?",
+  "kw": "Agent retrieval-agent k8s-agent requests in flight",
+  "targets": [
+   "Agent/retrieval-agent",
+   "Agent/retrieval-agent-minilm"
+  ],
+  "evidence": "Keep at most three requests to it in flight",
+  "facts": [
+   [
+    "three",
+    "\\b3\\b"
+   ]
+  ],
+  "depth_tokens": 444,
+  "depth": "deep",
+  "doc_tokens": 2101
+ },
+ {
+  "id": "q22",
+  "lang": "en",
+  "q": "Which kinds of cluster changes is the k8s-agent not allowed to make?",
+  "kw": "Agent k8s-agent apply create patch delete out of scope",
+  "targets": [
+   "Agent/k8s-agent"
+  ],
+  "evidence": "apply, create, patch, delete, scale, exec",
+  "facts": [
+   [
+    "apply"
+   ],
+   [
+    "delete"
+   ],
+   [
+    "patch"
+   ]
+  ],
+  "depth_tokens": 290,
+  "depth": "deep",
+  "doc_tokens": 1100
+ },
+ {
+  "id": "q23",
+  "lang": "en",
+  "q": "Why is the chart's built-in k8s-agent disabled in the kagent HelmRelease?",
+  "kw": "HelmRelease kagent k8s-agent enabled false",
+  "targets": [
+   "HelmRelease/kagent",
+   "Agent/k8s-agent"
+  ],
+  "evidence": "Response Format",
+  "facts": [
+   [
+    "summari[sz]e",
+    "prose"
+   ],
+   [
+    "verbatim",
+    "hardcode",
+    "replaced",
+    "own agent",
+    "cannot be tuned"
+   ]
+  ],
+  "depth_tokens": 739,
+  "depth": "deep",
+  "doc_tokens": 820
+ },
+ {
+  "id": "q24",
+  "lang": "en",
+  "q": "Which paths does the kagent HTTPRoute route, and to which backend services and ports?",
+  "kw": "HTTPRoute kagent backendRefs /api",
+  "targets": [
+   "HTTPRoute/kagent"
+  ],
+  "evidence": "name: kagent-ui",
+  "facts": [
+   [
+    "/api"
+   ],
+   [
+    "kagent-controller"
+   ],
+   [
+    "8083"
+   ],
+   [
+    "kagent-ui"
+   ],
+   [
+    "8080"
+   ]
+  ],
+  "depth_tokens": 115,
+  "depth": "head",
+  "doc_tokens": 131
+ },
+ {
+  "id": "q25",
+  "lang": "en",
+  "q": "Which Flux controllers does the FluxInstance install?",
+  "kw": "FluxInstance flux components controllers",
+  "targets": [
+   "FluxInstance/flux"
+  ],
+  "evidence": "- notification-controller",
+  "facts": [
+   [
+    "source-controller",
+    "source"
+   ],
+   [
+    "kustomize-controller",
+    "kustomize"
+   ],
+   [
+    "helm-controller",
+    "helm"
+   ],
+   [
+    "notification"
+   ]
+  ],
+  "depth_tokens": 193,
+  "depth": "deep",
+  "doc_tokens": 233
+ },
+ {
+  "id": "q26",
+  "lang": "en",
+  "q": "Why does the gateway-api GitRepository fetch all of /config/crd instead of only one channel?",
+  "kw": "GitRepository gateway-api ignore config/crd artifact revision",
+  "targets": [
+   "GitRepository/gateway-api",
+   "GitRepository/gateway-api-inference-extension"
+  ],
+  "evidence": "kustomization path not\n  # found",
+  "facts": [
+   [
+    "revision"
+   ],
+   [
+    "path not found",
+    "old artifact",
+    "not notice",
+    "doesn't notice",
+    "does not notice",
+    "no(t)? (be )?rebuil"
+   ]
+  ],
+  "depth_tokens": 463,
+  "depth": "deep",
+  "doc_tokens": 506
+ },
+ {
+  "id": "n01",
+  "lang": "en",
+  "q": "What is the replica count of the Redis cache deployment?",
+  "negative": true,
+  "kw": "Deployment redis replicas",
+  "targets": [],
+  "evidence": null,
+  "facts": []
+ },
+ {
+  "id": "n02",
+  "lang": "en",
+  "q": "What scrape interval is configured for Prometheus?",
+  "negative": true,
+  "kw": "Prometheus scrape interval ServiceMonitor",
+  "targets": [],
+  "evidence": null,
+  "facts": []
+ },
+ {
+  "id": "u01",
+  "lang": "uk",
+  "q": "Чому для Phoenix розширили бюджет startup probe?",
+  "kw": "HelmRelease phoenix startupProbe failureThreshold",
+  "targets": [
+   "HelmRelease/phoenix"
+  ],
+  "evidence": "Alembic migrations",
+  "facts": [
+   [
+    "Alembic",
+    "міграц",
+    "migration"
+   ]
+  ],
+  "depth_tokens": 119,
+  "depth": "head",
+  "doc_tokens": 256
+ },
+ {
+  "id": "u02",
+  "lang": "uk",
+  "q": "Який пароль використовує Neo4j?",
+  "kw": "HelmRelease neo4j password",
+  "targets": [
+   "HelmRelease/neo4j",
+   "MCPServer/neo4j-mcp"
+  ],
+  "evidence": "abox-neo4j",
+  "facts": [
+   [
+    "abox-neo4j"
+   ]
+  ],
+  "depth_tokens": 233,
+  "depth": "deep",
+  "doc_tokens": 596
+ },
+ {
+  "id": "u03",
+  "lang": "uk",
+  "q": "На якому порту слухає сервіс llm-d-embedding?",
+  "kw": "Service llm-d-embedding port",
+  "targets": [
+   "Service/llm-d-embedding",
+   "HTTPRoute/llm-d-embedding",
+   "HelmRelease/llm-d-embedding"
+  ],
+  "evidence": "port: 8000",
+  "facts": [
+   [
+    "8000"
+   ]
+  ],
+  "depth_tokens": 142,
+  "depth": "deep",
+  "doc_tokens": 156
+ },
+ {
+  "id": "u04",
+  "lang": "uk",
+  "q": "Навіщо в kagent HelmRelease явно задано теги образів?",
+  "kw": "HelmRelease kagent image tag controller ui",
+  "targets": [
+   "HelmRelease/kagent"
+  ],
+  "evidence": "InvalidImageName",
+  "facts": [
+   [
+    "\\+"
+   ],
+   [
+    "InvalidImageName",
+    "invalid reference",
+    "не(допустим|валідн|припустим)",
+    "not (legal|valid|allowed)",
+    "illegal",
+    "invalid"
+   ]
+  ],
+  "depth_tokens": 515,
+  "depth": "deep",
+  "doc_tokens": 820
+ }
+]
