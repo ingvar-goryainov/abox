@@ -237,6 +237,12 @@ question costs more than the default server's. kagent's runtime is built on ADK.
 Whether its ADK version passes `structuredContent` the same way was not checked in
 the cluster.
 
+The copy is there for a reason. Every tool is registered as `MCPTool[_, Raw]`, so
+the Go SDK declares an output schema of `{"body": string}` and always sends
+`structuredContent`. Before [upstream PR #10](https://github.com/den-vasyliev/abox/pull/10)
+that was `{"body": ""}` next to the full text, and kagent agents read the empty body
+and reported an empty store ([#9](https://github.com/den-vasyliev/abox/issues/9)).
+
 ### Similarity scores do not detect "not stored"
 
 On the scaled corpus, both no-answer questions scored a top hit of 0.610–0.648 on
@@ -278,10 +284,13 @@ is what worked: 12/12 runs.
 
 ### Follow-ups
 
-1. **Part of this decision.** `qdrant-mcp` should send each result once: put the
-   parsed hits in `StructuredContent`, or leave it unset, instead of repeating the
-   text as a string under `body`. Re-run `evals/retrieval` afterwards to confirm
-   the median cost drops (Finding 5).
+1. **Part of this decision.** `qdrant-mcp` should send each result once. Leaving
+   `StructuredContent` unfilled is not the fix: with the output schema still
+   declared, the SDK sends `{"body": ""}` and brings back #9. Register the tools
+   without an output schema instead, so a result is `content` only, as the
+   official server's is. Then check both that #9's `tools/call` repro still
+   returns the hits and, by re-running `evals/retrieval`, that the median cost
+   drops (Finding 5).
 2. `qdrant-mcp`: group `vector_find` hits by the `doc` payload field, so five hits
    are five objects (Finding 4, crowding).
 3. `qdrant-mcp`: embed each chunk with a kind/name header, so a chunk keeps its
